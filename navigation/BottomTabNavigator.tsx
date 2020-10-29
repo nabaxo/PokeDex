@@ -5,8 +5,8 @@ import * as React from 'react';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
+import PokeList from '../screens/PokeList';
+import PokeFavorites from '../screens/PokeFavorites';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
@@ -16,17 +16,17 @@ export default function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Pokedex"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
       <BottomTab.Screen
-        name="TabOne"
+        name="Pokedex"
         component={TabOneNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
+        name="Pokefavs"
         component={TabTwoNavigator}
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
@@ -38,7 +38,7 @@ export default function BottomTabNavigator() {
 
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
-function TabBarIcon(props: { name: string; color: string }) {
+function TabBarIcon(props: { name: string; color: string; }) {
   return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
 }
 
@@ -50,9 +50,9 @@ function TabOneNavigator() {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
-        options={{ headerTitle: 'Tab One Title' }}
+        name="PokedexScreen"
+        component={PokeList}
+        options={{ headerTitle: 'Pokédex' }}
       />
     </TabOneStack.Navigator>
   );
@@ -64,9 +64,9 @@ function TabTwoNavigator() {
   return (
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{ headerTitle: 'Tab Two Title' }}
+        name="PokefavsScreen"
+        component={PokeFavorites}
+        options={{ headerTitle: 'Pokéfavs' }}
       />
     </TabTwoStack.Navigator>
   );
