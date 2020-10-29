@@ -66,7 +66,7 @@ function TabTwoNavigator() {
       <TabTwoStack.Screen
         name="PokefavsScreen"
         component={PokeFavorites}
-        options={{ headerTitle: 'Pokéfavs' }}
+        options={{ headerTitle: 'My Favorite Pokémon' }}
       />
     </TabTwoStack.Navigator>
   );
