@@ -6,7 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Text, View } from '../components/Themed';
 import { FlatList } from 'react-native-gesture-handler';
 
-import { styleSheet, listSeparator } from './styles';
+import { styleSheet, ListSeparator } from './styles';
 import { FavoritesContext } from '../contexts';
 
 interface pokeEntry {
@@ -65,7 +65,7 @@ export default function PokeList() {
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       {pokeList &&
         <FlatList style={styles.list} data={pokeList}
-          ItemSeparatorComponent={listSeparator}
+          ItemSeparatorComponent={ListSeparator}
           onEndReachedThreshold={.2}
           onEndReached={loadMore}
           keyExtractor={(item, index) => index.toString()}
@@ -74,11 +74,9 @@ export default function PokeList() {
             return (
               <View key={dexNumber} style={styles.listEntry}>
                 <Image style={styles.sprite} source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${dexNumber}.png` }} />
-                <Text
-                  style={styles.listText} >
+                <Text style={styles.listText} >
                   {dexNumber + '. ' + pokemon.name}
                 </Text>
-                {/* <Text onPress={handleFavorite} style={styles.star}>{star ? '★' : '☆'}</Text> */}
                 <Text onPress={() => handleFavorite(pokemon.name)} style={styles.star}>{favorites.includes(pokemon.name) ? '★' : '☆'}</Text>
               </View>
             );
