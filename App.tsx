@@ -11,7 +11,7 @@ export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
-  const [favorites, setFavorites] = useState<string[]>(['']);
+  const [favorites, setFavorites] = useState<string[]>([]);
 
   function addFavorite(pokemon: string) {
     if (!favorites.includes(pokemon)) {
