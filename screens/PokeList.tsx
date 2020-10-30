@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import React from 'react';
+import { useCallback, useState } from 'react';
+import { Image, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { Text, View } from '../components/Themed';
@@ -13,21 +13,46 @@ interface pokeEntry {
 }
 
 export default function PokeList() {
-  const [limit, setLimit] = useState(20);
+  const limit = 19;
   const [offset, setOffset] = useState(0);
   const [pokeList, setPokeList] = useState<pokeEntry[]>();
+  const [star, setStar] = useState(false);
+  const url = `https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`;
 
   useFocusEffect(
-    React.useCallback(() => {
-      const url = `https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`;
+    useCallback(() => {
       fetch(url)
-        .then(r => r.json())
+        .then(r => {
+          if (r.ok) {
+            return r.json();
+          } else {
+            throw new Error();
+          }
+        })
         .then((json) => {
-          setPokeList(json.results);
+          if (pokeList) {
+            // console.log(offset);
+            // setPokeList((prevState) => ([...prevState, ...json.results]));
+            setPokeList([...pokeList, ...json.results]);
+          } else {
+            setOffset(0);
+            setPokeList(json.results);
+          }
         });
-      // console.log(pokeList.results[1].url.replace(/[^0-9]/g, '').substring(1));
-      // console.log(pokeList.results);
-    }, [pokeList]));
+    }, [offset])
+  );
+
+  function loadMore() {
+    setTimeout(() => {
+      if (offset < 874) {
+        setOffset(offset + 19);
+      }
+    }, 500);
+  }
+
+  function handleFavorite(name: string) {
+    console.log(name);
+  }
 
   return (
     <View style={styles.container}>
@@ -35,15 +60,34 @@ export default function PokeList() {
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       {pokeList &&
         <FlatList style={styles.list} data={pokeList}
-          renderItem={({ item }) => <Text
-            style={styles.listItem}
-            key={item.url.replace(/[^0-9]/g, '').substring(1)}
-          >{item.name}
-          </Text>}
-        />}
+          ItemSeparatorComponent={listSeparator}
+          onEndReachedThreshold={.2}
+          onEndReached={loadMore}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item: pokemon }) => {
+            const dexNumber = +pokemon.url.replace('https://pokeapi.co/api/v2/pokemon/', '').replace('/', '');
+            return (
+              <View key={dexNumber} style={styles.listEntry}>
+                <Image style={styles.sprite} source={{ uri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${dexNumber}.png` }} />
+                <Text
+                  style={styles.listText} >
+                  {dexNumber + '. ' + pokemon.name}
+                </Text>
+                {/* <Text onPress={handleFavorite} style={styles.star}>{star ? '★' : '☆'}</Text> */}
+                <Text onPress={() => handleFavorite(pokemon.name)} style={styles.star}>☆</Text>
+              </View>
+            );
+          }}
+        />
+      }
     </View>
   );
 }
+
+function listSeparator() {
+  return <View style={styles.listSeparator} lightColor="#ddd" darkColor="rgba(255,255,255,0.1)" />;
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -62,10 +106,37 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-  },
-  listItem: {
-    fontSize: 16,
-    borderBottomWidth: 1,
     width: '100%',
+  },
+  listEntry: {
+    flexDirection: 'row',
+    // height: 50,
+  },
+  listText: {
+    fontSize: 16,
+    width: '100%',
+    height: 32,
+    paddingLeft: 10,
+    alignSelf: 'flex-end',
+    flex: 10,
+  },
+  listSeparator: {
+    marginVertical: 10,
+    height: 1,
+    width: '100%'
+  },
+  sprite: {
+    height: 32,
+    width: 32,
+    padding: 40,
+    // paddingLeft: 48,
+    alignSelf: 'flex-start',
+    flex: 1,
+  },
+  star: {
+    fontSize: 32,
+    paddingRight: 32,
+    alignSelf: 'flex-end',
+    flex: 1,
   }
 });
