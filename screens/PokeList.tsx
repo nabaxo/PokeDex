@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useCallback, useState } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -6,6 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Text, View } from '../components/Themed';
 import { FlatList } from 'react-native-gesture-handler';
 
+import { FavoritesContext } from '../contexts';
 
 interface pokeEntry {
   name: string;
@@ -16,7 +17,8 @@ export default function PokeList() {
   const limit = 19;
   const [offset, setOffset] = useState(0);
   const [pokeList, setPokeList] = useState<pokeEntry[]>();
-  const [star, setStar] = useState(false);
+  const { favorites, addFavorite, removeFavorite } = useContext(FavoritesContext);
+
   const url = `https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`;
 
   useFocusEffect(
@@ -31,8 +33,6 @@ export default function PokeList() {
         })
         .then((json) => {
           if (pokeList) {
-            // console.log(offset);
-            // setPokeList((prevState) => ([...prevState, ...json.results]));
             setPokeList([...pokeList, ...json.results]);
           } else {
             setOffset(0);
@@ -51,7 +51,11 @@ export default function PokeList() {
   }
 
   function handleFavorite(name: string) {
-    console.log(name);
+    if (!favorites.includes(name)) {
+      addFavorite(name);
+    } else {
+      removeFavorite(name);
+    }
   }
 
   return (
@@ -74,7 +78,7 @@ export default function PokeList() {
                   {dexNumber + '. ' + pokemon.name}
                 </Text>
                 {/* <Text onPress={handleFavorite} style={styles.star}>{star ? '★' : '☆'}</Text> */}
-                <Text onPress={() => handleFavorite(pokemon.name)} style={styles.star}>☆</Text>
+                <Text onPress={() => handleFavorite(pokemon.name)} style={styles.star}>{favorites.includes(pokemon.name) ? '★' : '☆'}</Text>
               </View>
             );
           }}
