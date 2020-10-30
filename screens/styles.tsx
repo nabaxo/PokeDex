@@ -38,6 +38,12 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
         height: 1,
         width: '100%'
     },
+    shortListSeparator: {
+        marginVertical: 10,
+        height: 2,
+        width: '75%',
+        alignSelf: 'center',
+    },
     sprite: {
         height: 32,
         width: 32,
@@ -51,9 +57,55 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
         paddingRight: 32,
         alignSelf: 'flex-end',
         flex: 1,
-    }
+    },
+    favEntry: {
+        flexDirection: 'column',
+    },
+    favHeader: {
+        fontSize: 32,
+        alignSelf: 'center',
+    },
+    favImage: {
+        padding: 100,
+        alignSelf: 'center',
+        flex: 1,
+    },
+    types: {
+        flex: 1,
+        flexDirection: 'row',
+        alignSelf: 'center',
+    },
+    type: {
+        width: '25%',
+        textAlign: 'center',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 5,
+        color: '#fff'
+    },
+    baseStats: {
+        flexDirection: 'column',
+    },
+    baseStatsRow: {
+        flexDirection: 'row',
+        paddingVertical: 5,
+        height: 42,
+        alignSelf: 'stretch',
+        alignItems: 'flex-end',
+        width: '100%',
+    },
+    baseLabel: {
+        fontSize: 16,
+        paddingLeft: 20,
+        maxWidth: 150,
+        flex: 1,
+    },
+    baseStat: {
+        flex: 1,
+        maxWidth: 50,
+    },
 };
 
-export function listSeparator() {
+export function ListSeparator() {
     return <View style={styleSheet.listSeparator} lightColor="#ddd" darkColor="rgba(255,255,255,0.1)" />;
 }
