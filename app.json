@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "first-project",
-    "slug": "first-project",
+    "name": "PokeDex",
+    "slug": "PokeDex",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "PokeDex",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
