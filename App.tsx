@@ -50,7 +50,6 @@ export default function App() {
 
   useEffect(() => {
     storeData(favorites);
-    console.log('store successful');
   }, [favorites]);
 
   if (!isLoadingComplete) {
