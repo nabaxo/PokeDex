@@ -83,6 +83,17 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
         borderRadius: 5,
         color: '#fff'
     },
+    detailVariationsRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+    },
+    detailVariationsColumn: {
+        flexDirection: 'column',
+    },
+    detailVariationsImage: {
+        padding: 50,
+        alignSelf: 'center',
+    },
     baseStats: {
         flexDirection: 'column',
     },

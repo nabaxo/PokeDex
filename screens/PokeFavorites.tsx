@@ -17,7 +17,8 @@ interface baseStats {
   speed: number;
 }
 
-interface favData {
+interface pokemonDetails {
+  species: string;
   name: string;
   id: number;
   image: string;
@@ -25,12 +26,16 @@ interface favData {
   stats: baseStats;
 }
 
+interface typeColorsInterface {
+  [type: string]: string,
+}
+
 export default function PokeFavorites() {
   const { favorites, addFavorite, removeFavorite } = useContext(FavoritesContext);
-  const [favList, setFavList] = useState<favData[]>();
+  const [favList, setFavList] = useState<pokemonDetails[][]>();
   const [isExpanded, setIsExpanded] = useState<number>();
 
-  const typeColors = {
+  const typeColors: typeColorsInterface = {
     normal: '#A8A878',
     fighting: '#C03028',
     flying: '#A890F0',
@@ -51,35 +56,43 @@ export default function PokeFavorites() {
     fairy: '#EE99AC',
   };
 
+
   useFocusEffect(
     useCallback(() => {
-      Promise.all<favData>(favorites.map(p => {
-        const url = `https://pokeapi.co/api/v2/pokemon/${p}`;
-        return fetch(url)
+      Promise.all<pokemonDetails[]>(favorites.map(async p => {
+        const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${p}`;
+        const varieties = await fetch(speciesUrl)
           .then(r => r.json())
           .then(json => {
-            let imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${json.id}.png`;
-            if (json.sprites.other['official-artwork'].front_default) {
-              imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${json.id}.png`;
-            }
-
-            const entry: favData = {
-              name: json.species.name,
-              id: +json.id,
-              image: imgUrl,
-              types: json.types.map((t: any) => t.type.name),
-              stats: {
-                hp: +json.stats[0].base_stat,
-                attack: +json.stats[1].base_stat,
-                defense: +json.stats[2].base_stat,
-                spAtt: +json.stats[3].base_stat,
-                spDef: +json.stats[4].base_stat,
-                speed: +json.stats[5].base_stat,
-              }
-            };
-            // console.log('entry', entry);
-            return entry;
+            return json.varieties.map((v: any) => v.pokemon.name);
           });
+
+        const entries = Promise.all<pokemonDetails>(varieties.map(async (p: string) => {
+          const url = `https://pokeapi.co/api/v2/pokemon/${p}`;
+          const result = await fetch(url);
+          const json = await result.json();
+          let imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${json.id}.png`;
+          if (json.sprites.other['official-artwork'].front_default) {
+            imgUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${json.id}.png`;
+          }
+          const entry: pokemonDetails = {
+            species: json.species.name,
+            name: json.name,
+            id: +json.id,
+            image: imgUrl,
+            types: json.types.map((t: any) => t.type.name),
+            stats: {
+              hp: +json.stats[0].base_stat,
+              attack: +json.stats[1].base_stat,
+              defense: +json.stats[2].base_stat,
+              spAtt: +json.stats[3].base_stat,
+              spDef: +json.stats[4].base_stat,
+              speed: +json.stats[5].base_stat,
+            }
+          };
+          return entry;
+        }));
+        return [...await entries];
       })).then(arr => setFavList(arr));
     }, [favorites])
   );
@@ -92,22 +105,34 @@ export default function PokeFavorites() {
     }
   }
 
-  // console.log('list:', favList?.length, favList);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Your Favorite Pokémon</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       {favList && <FlatList style={styles.list} data={favList}
         ItemSeparatorComponent={ListSeparator}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item: pokemon }) => {
+        keyExtractor={(_item, index) => index.toString()}
+        renderItem={({ item }) => {
+          const pokemon = item[0];
           return (
             <View key={pokemon.id} style={styles.favEntry}>
               <TouchableOpacity onPress={() => handlePress(pokemon.id)}>
                 <Text style={styles.favHeader}>{pokemon.name.toUpperCase()}</Text>
                 <View style={styles.shortListSeparator} lightColor="#ddd" darkColor="rgba(255,255,255,0.1)"></View>
                 <Image style={styles.favImage} source={{ uri: pokemon.image }} />
-                <View style={styles.types}>{pokemon.types.map(t => <Text style={[styles.type, { backgroundColor: typeColors[t] }]}>{t.toUpperCase()} </Text>)}</View>
+                <View style={styles.types}>{pokemon.types.map(t => <Text key={t} style={[styles.type, { backgroundColor: typeColors[t] }]}>{t.toUpperCase()} </Text>)}</View>
+                {item.length > 1 && (
+                  <View style={styles.detailVariationsRow}>
+                    {item.map(v => {
+                      return (
+                        <View key={v.id} style={styles.detailVariationsColumn}>
+                          <Image style={styles.detailVariationsImage} source={{ uri: v.image }} />
+                          <Text>{v.name.toUpperCase()}</Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+                )}
                 {pokemon.id === isExpanded &&
                   <View style={styles.baseStats}>
                     <Text style={styles.listText}>Base stats:</Text>
