@@ -23,7 +23,6 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
     },
     listEntry: {
         flexDirection: 'row',
-        // height: 50,
     },
     listText: {
         fontSize: 16,
@@ -36,7 +35,7 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
     listSeparator: {
         marginVertical: 10,
         height: 1,
-        width: '100%'
+        width: '100%',
     },
     shortListSeparator: {
         marginVertical: 10,
@@ -48,7 +47,6 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
         height: 32,
         width: 32,
         padding: 40,
-        // paddingLeft: 48,
         alignSelf: 'flex-start',
         flex: 1,
     },
