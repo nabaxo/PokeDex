@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { createContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
@@ -25,6 +26,32 @@ export default function App() {
   }
 
   const value = { favorites, addFavorite, removeFavorite };
+
+  async function getData() {
+    try {
+      const pokemonsInStorage = await AsyncStorage.getItem('@index');
+      return pokemonsInStorage !== null ? JSON.parse(pokemonsInStorage) : null;
+    } catch (e) {
+      alert('Failed to load favorites');
+    }
+  }
+
+  async function storeData(pokemons: string[]) {
+    try {
+      await AsyncStorage.setItem('@index', JSON.stringify(pokemons));
+    } catch (e) {
+      alert('Saving error');
+    }
+  }
+
+  useEffect(() => {
+    getData().then(p => setFavorites(p));
+  }, []);
+
+  useEffect(() => {
+    storeData(favorites);
+    console.log('store successful');
+  }, [favorites]);
 
   if (!isLoadingComplete) {
     return null;
