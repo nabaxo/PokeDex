@@ -99,7 +99,7 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
         color: '#e1edeb',
     },
     typeSmall: {
-        width: '25%',
+        minWidth: '14%',
         fontSize: 8,
         textAlign: 'center',
         paddingVertical: 4,

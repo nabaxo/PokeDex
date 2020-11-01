@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -8,6 +8,7 @@ import { PokemonDetails } from '../types';
 import { typeColors } from '../constants/Colors';
 import { styleSheet, ListSeparator } from '../styles';
 import fetchPokemon from '../functions/fetchPokemon';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface DetailsProps {
     pokemonToShow: string;
@@ -17,13 +18,14 @@ export default function ShowDetails({ pokemonToShow }: DetailsProps) {
     const [pokemon, setPokemon] = useState<PokemonDetails[]>();
     const [variety, setVariety] = useState<PokemonDetails>();
 
-    useEffect(() => {
-        fetchPokemon(pokemonToShow).then(poke => {
-            setPokemon(poke);
-            setVariety(poke[0]);
-        });
-    }, [pokemonToShow]);
-
+    useFocusEffect(
+        useCallback(() => {
+            fetchPokemon(pokemonToShow).then(poke => {
+                setPokemon(poke);
+                setVariety(poke[0]);
+            });
+        }, [pokemonToShow])
+    );
     function capitalizeFirstLetter(string: string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -50,6 +52,15 @@ export default function ShowDetails({ pokemonToShow }: DetailsProps) {
             <ListSeparator />
             {variety && (
                 <View style={styles.baseStats}>
+                    {pokemon && pokemon.length < 2 && (
+                        <View style={[styles.types, { alignSelf: 'center', paddingVertical: 5 }]}>
+                            {variety.types.map(t =>
+                                <Text key={t} style={[styles.typeSmall, { backgroundColor: typeColors[t] }]}>
+                                    {t.toUpperCase()}
+                                </Text>
+                            )}
+                        </View>
+                    )}
                     <Text style={styles.listText}>{capitalizeFirstLetter(variety.name)} base stats:</Text>
                     <View style={styles.baseStatsRow}>
                         <Text style={styles.baseLabel}>HP:</Text>
