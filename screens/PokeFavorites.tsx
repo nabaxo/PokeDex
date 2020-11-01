@@ -6,7 +6,7 @@ import { Text, View } from '../components/Themed';
 
 import { styleSheet, ListSeparator } from './styles';
 import { FavoritesContext } from '../contexts';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 
 interface baseStats {
   hp: number;
@@ -31,7 +31,7 @@ interface typeColorsInterface {
 }
 
 export default function PokeFavorites() {
-  const { favorites, addFavorite, removeFavorite } = useContext(FavoritesContext);
+  const { favorites, removeFavorite } = useContext(FavoritesContext);
   const [favList, setFavList] = useState<pokemonDetails[][]>();
   const [isExpanded, setIsExpanded] = useState<number>();
 
@@ -116,59 +116,66 @@ export default function PokeFavorites() {
           const pokemon = item[0];
           return (
             <View key={pokemon.id} style={styles.favEntry}>
+              <View style={styles.favHeader}>
+                <Text style={styles.favHeaderText}>{pokemon.name.toUpperCase()}</Text>
+                <TouchableHighlight activeOpacity={0.6} underlayColor='#fff' onPress={() => removeFavorite(pokemon.name)}>
+                  <View style={styles.removeButton}>
+                    <Text style={styles.removeButtonText}>Remove</Text>
+                  </View>
+                </TouchableHighlight>
+              </View>
               <TouchableOpacity onPress={() => handlePress(pokemon.id)}>
-                <Text style={styles.favHeader}>{pokemon.name.toUpperCase()}</Text>
                 <View style={styles.shortListSeparator} lightColor="#ddd" darkColor="rgba(255,255,255,0.1)"></View>
                 <Image style={styles.favImage} source={{ uri: pokemon.image }} />
                 <View style={styles.types}>{pokemon.types.map(t => <Text key={t} style={[styles.type, { backgroundColor: typeColors[t] }]}>{t.toUpperCase()} </Text>)}</View>
-                {item.length > 1 && (
-                  <View style={styles.detailVariationsRow}>
-                    {item.map(v => {
-                      return (
-                        <View key={v.id} style={styles.detailVariationsColumn}>
-                          <Image style={styles.detailVariationsImage} source={{ uri: v.image }} />
-                          <Text>{v.name.toUpperCase()}</Text>
-                        </View>
-                      );
-                    })}
-                  </View>
-                )}
-                {pokemon.id === isExpanded &&
-                  <View style={styles.baseStats}>
-                    <Text style={styles.listText}>Base stats:</Text>
-                    <View style={styles.baseStatsRow}>
-                      <Text style={styles.baseLabel}>HP:</Text>
-                      <Text style={styles.baseStat}>{pokemon.stats.hp}</Text>
-                      <View style={{ backgroundColor: '#FF0000', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.hp }}></View>
-                    </View>
-                    <View style={styles.baseStatsRow}>
-                      <Text style={styles.baseLabel}>Attack:</Text>
-                      <Text style={styles.baseStat}>{pokemon.stats.attack}</Text>
-                      <View style={{ backgroundColor: '#F08030', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.attack }}></View>
-                    </View>
-                    <View style={styles.baseStatsRow}>
-                      <Text style={styles.baseLabel}>Defense:</Text>
-                      <Text style={styles.baseStat}>{pokemon.stats.defense}</Text>
-                      <View style={{ backgroundColor: '#F8D030', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.defense }}></View>
-                    </View>
-                    <View style={styles.baseStatsRow}>
-                      <Text style={styles.baseLabel}>Special Attack:</Text>
-                      <Text style={styles.baseStat}>{pokemon.stats.spAtt}</Text>
-                      <View style={{ backgroundColor: '#6890F0', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.spAtt }}></View>
-                    </View>
-                    <View style={styles.baseStatsRow}>
-                      <Text style={styles.baseLabel}>Special Defense:</Text>
-                      <Text style={styles.baseStat}>{pokemon.stats.spDef}</Text>
-                      <View style={{ backgroundColor: '#78C850', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.spDef }}></View>
-                    </View>
-                    <View style={styles.baseStatsRow}>
-                      <Text style={styles.baseLabel}>Speed:</Text>
-                      <Text style={styles.baseStat}>{pokemon.stats.speed}</Text>
-                      <View style={{ backgroundColor: '#F85888', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.speed }}></View>
-                    </View>
-                  </View>
-                }
               </TouchableOpacity>
+              {item.length > 1 && (
+                <View style={styles.detailVariationsRow}>
+                  {item.map(v => {
+                    return (
+                      <View key={v.id} style={styles.detailVariationsColumn}>
+                        <Image style={styles.detailVariationsImage} source={{ uri: v.image }} />
+                        <Text>{v.name.toUpperCase()}</Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              )}
+              {pokemon.id === isExpanded &&
+                <View style={styles.baseStats}>
+                  <Text style={styles.listText}>Base stats:</Text>
+                  <View style={styles.baseStatsRow}>
+                    <Text style={styles.baseLabel}>HP:</Text>
+                    <Text style={styles.baseStat}>{pokemon.stats.hp}</Text>
+                    <View style={{ backgroundColor: '#FF0000', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.hp }}></View>
+                  </View>
+                  <View style={styles.baseStatsRow}>
+                    <Text style={styles.baseLabel}>Attack:</Text>
+                    <Text style={styles.baseStat}>{pokemon.stats.attack}</Text>
+                    <View style={{ backgroundColor: '#F08030', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.attack }}></View>
+                  </View>
+                  <View style={styles.baseStatsRow}>
+                    <Text style={styles.baseLabel}>Defense:</Text>
+                    <Text style={styles.baseStat}>{pokemon.stats.defense}</Text>
+                    <View style={{ backgroundColor: '#F8D030', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.defense }}></View>
+                  </View>
+                  <View style={styles.baseStatsRow}>
+                    <Text style={styles.baseLabel}>Special Attack:</Text>
+                    <Text style={styles.baseStat}>{pokemon.stats.spAtt}</Text>
+                    <View style={{ backgroundColor: '#6890F0', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.spAtt }}></View>
+                  </View>
+                  <View style={styles.baseStatsRow}>
+                    <Text style={styles.baseLabel}>Special Defense:</Text>
+                    <Text style={styles.baseStat}>{pokemon.stats.spDef}</Text>
+                    <View style={{ backgroundColor: '#78C850', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.spDef }}></View>
+                  </View>
+                  <View style={styles.baseStatsRow}>
+                    <Text style={styles.baseLabel}>Speed:</Text>
+                    <Text style={styles.baseStat}>{pokemon.stats.speed}</Text>
+                    <View style={{ backgroundColor: '#F85888', flex: 2, alignSelf: 'stretch', maxWidth: pokemon.stats.speed }}></View>
+                  </View>
+                </View>
+              }
             </View>
           );
         }}

@@ -60,8 +60,14 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
     },
     favEntry: {
         flexDirection: 'column',
+        alignContent: 'center',
+        marginBottom: 20,
     },
     favHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
+    },
+    favHeaderText: {
         fontSize: 32,
         alignSelf: 'center',
     },
@@ -69,6 +75,17 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
         padding: 100,
         alignSelf: 'center',
         flex: 1,
+    },
+    removeButton: {
+        fontSize: 15,
+        backgroundColor: '#eb2653',
+        marginVertical: 5,
+        padding: 8,
+        borderRadius: 5,
+        alignSelf: 'center'
+    },
+    removeButtonText: {
+        color: '#e1edeb',
     },
     types: {
         flex: 1,
@@ -81,7 +98,7 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 5,
-        color: '#fff'
+        color: '#e1edeb',
     },
     detailVariationsRow: {
         flexDirection: 'row',
