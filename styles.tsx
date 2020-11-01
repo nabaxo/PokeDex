@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { View } from '../components/Themed';
+import { View } from './components/Themed';
 
 export const styleSheet: StyleSheet.NamedStyles<any> = {
     container: {
@@ -100,15 +100,29 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
         borderRadius: 5,
         color: '#e1edeb',
     },
+    typeSmall: {
+        width: '25%',
+        fontSize: 8,
+        textAlign: 'center',
+        paddingVertical: 4,
+        borderRadius: 5,
+        color: '#e1edeb',
+    },
     detailVariationsRow: {
         flexDirection: 'row',
         justifyContent: 'space-evenly',
+        marginHorizontal: 20,
+        marginTop: 10,
     },
     detailVariationsColumn: {
         flexDirection: 'column',
     },
     detailVariationsImage: {
         padding: 50,
+        alignSelf: 'center',
+    },
+    detailVariationsTitle: {
+        fontSize: 10,
         alignSelf: 'center',
     },
     baseStats: {

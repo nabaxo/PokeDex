@@ -6,7 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Text, View } from '../components/Themed';
 import { FlatList } from 'react-native-gesture-handler';
 
-import { styleSheet, ListSeparator } from './styles';
+import { styleSheet, ListSeparator } from '../styles';
 import { FavoritesContext } from '../contexts';
 
 interface pokeEntry {
