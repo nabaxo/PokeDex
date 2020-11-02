@@ -31,6 +31,7 @@ export interface PokemonDetails {
   id: number;
   image: string;
   types: string[];
+  abilities: string[];
   stats: BaseStats;
 }
 

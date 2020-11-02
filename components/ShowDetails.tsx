@@ -41,9 +41,16 @@ export default function ShowDetails({ pokemonToShow }: DetailsProps) {
                                 <View style={styles.detailVariationsColumn}>
                                     <Text style={styles.detailVariationsTitle}>{v.name.toUpperCase()}</Text>
                                     <Image style={styles.detailVariationsImage} source={{ uri: v.image }} />
+                                    <Text style={styles.typeSmall}>Abilities:</Text>
+                                    <View style={styles.types}>{v.abilities.map((a, i) =>
+                                        <Text key={a} style={[styles.typeSmall, { borderRadius: 5 }]}>{i + 1}. {capitalizeFirstLetter(a)}</Text>
+                                    )}
+                                    </View>
+                                    <Text style={styles.typeSmall}>Typing:</Text>
                                     <View style={styles.types}>{v.types.map(t =>
                                         <Text key={t} style={[styles.typeSmall, { backgroundColor: typeColors[t] }]}>{t.toUpperCase()}</Text>
-                                    )}</View>
+                                    )}
+                                    </View>
                                 </View>
                             </TouchableOpacity>
                         );
@@ -54,12 +61,20 @@ export default function ShowDetails({ pokemonToShow }: DetailsProps) {
             {variety && (
                 <View style={styles.baseStats}>
                     {pokemon && pokemon.length < 2 && (
-                        <View style={[styles.types, { alignSelf: 'center', paddingVertical: 5 }]}>
-                            {variety.types.map(t =>
-                                <Text key={t} style={[styles.typeSmall, { backgroundColor: typeColors[t] }]}>
-                                    {t.toUpperCase()}
-                                </Text>
+                        <View>
+                            <Text style={styles.typeSmall}>Abilities:</Text>
+                            <View style={styles.types}>{variety.abilities.map((a, i) =>
+                                <Text key={a} style={styles.typeSmall}>{i + 1}. {capitalizeFirstLetter(a)}</Text>
                             )}
+                            </View>
+                            <Text style={styles.typeSmall}>Typing:</Text>
+                            <View style={[styles.types, { alignSelf: 'center', paddingVertical: 5 }]}>
+                                {variety.types.map(t =>
+                                    <Text key={t} style={[styles.typeSmall, { backgroundColor: typeColors[t] }]}>
+                                        {t.toUpperCase()}
+                                    </Text>
+                                )}
+                            </View>
                         </View>
                     )}
                     <Text style={styles.listText}>{capitalizeFirstLetter(variety.name)} base stats:</Text>

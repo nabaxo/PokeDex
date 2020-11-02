@@ -22,6 +22,7 @@ export default async function fetchPokemon(pokemon: string) {
             id: +json.id,
             image: imgUrl,
             types: json.types.map((t: any) => t.type.name),
+            abilities: json.abilities.map((a: any) => a.ability.name),
             stats: {
                 hp: +json.stats[0].base_stat,
                 attack: +json.stats[1].base_stat,
