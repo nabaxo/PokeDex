@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { Text, View } from './Themed';
@@ -32,6 +32,7 @@ export default function ShowDetails({ pokemonToShow }: DetailsProps) {
 
     return (
         <View>
+            {!pokemon && <ActivityIndicator size='large' color='grey' />}
             {pokemon && pokemon.length > 1 && (
                 <View style={styles.detailVariationsRow}>
                     {pokemon.map(v => {
