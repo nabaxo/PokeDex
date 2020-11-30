@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useCallback, useState } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { Text, View } from '../components/Themed';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
 import { styleSheet, ListSeparator } from '../styles';
 import { FavoritesContext } from '../contexts';
@@ -16,16 +16,18 @@ interface pokeEntry {
 }
 
 export default function PokeList() {
-  const limit = 19;
+  const [limit, setLimit] = useState(19);
   const [offset, setOffset] = useState(0);
   const [pokeList, setPokeList] = useState<pokeEntry[]>();
   const [pokeDetail, setPokeDetails] = useState<string | undefined>();
+  const [query, setQuery] = useState<string>();
+
   const { favorites, addFavorite, removeFavorite } = useContext(FavoritesContext);
 
-  const url = `https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`;
 
   useFocusEffect(
     useCallback(() => {
+      const url = `https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`;
       fetch(url)
         .then(r => {
           if (r.ok) {
@@ -44,6 +46,31 @@ export default function PokeList() {
         });
     }, [offset])
   );
+
+  useEffect(() => {
+    if (query) {
+      const url = `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase()}`;
+      // console.log(url);
+      fetch(url)
+        .then(r => r.json())
+        .then(json => {
+          // console.log(json);
+          const result: pokeEntry = {
+            name: json.name,
+            url: `https://pokeapi.co/api/v2/pokemon/${json.id}`
+          };
+          console.log(result);
+          setPokeList([result]);
+        }).catch(e => {
+          const result: pokeEntry = {
+            name: 'Not Found',
+            url: ''
+          };
+          setPokeList([result]);
+          console.log(e);
+        });
+    }
+  }, [query]);
 
   function loadMore() {
     setTimeout(() => {
@@ -69,13 +96,27 @@ export default function PokeList() {
     }
   }
 
+  function handleSearch(q: string) {
+    setQuery(q);
+    if (q === '') {
+      setOffset(0);
+    }
+  }
+
   function capitalizeFirstLetter(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Pokédex</Text>
+      <TextInput
+        style={styles.searchBar}
+        onSubmitEditing={event => handleSearch(event.nativeEvent.text)}
+        placeholder='Search'
+        placeholderTextColor='#333'
+        returnKeyType='search'
+        clearTextOnFocus
+      />
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       {pokeList &&
         <FlatList style={styles.list} data={pokeList}
@@ -102,8 +143,7 @@ export default function PokeList() {
               </View>
             );
           }}
-        />
-      }
+        />}
     </View>
   );
 }

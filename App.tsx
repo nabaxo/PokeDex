@@ -15,13 +15,17 @@ export default function App() {
   const [favorites, setFavorites] = useState<string[]>([]);
 
   function addFavorite(pokemon: string) {
-    if (!favorites.includes(pokemon)) {
-      setFavorites([...favorites, pokemon]);
+    if (favorites) {
+      if (!favorites.includes(pokemon)) {
+        setFavorites([...favorites, pokemon]);
+      }
     }
   }
   function removeFavorite(pokemon: string) {
-    if (favorites.includes(pokemon)) {
-      setFavorites(favorites.filter(p => p !== pokemon));
+    if (favorites) {
+      if (favorites.includes(pokemon)) {
+        setFavorites(favorites.filter(p => p !== pokemon));
+      }
     }
   }
 

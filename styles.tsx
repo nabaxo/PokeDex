@@ -37,6 +37,12 @@ export const styleSheet: StyleSheet.NamedStyles<any> = {
         height: 1,
         width: '100%',
     },
+    searchBar: {
+        height: 50,
+        fontSize: 30,
+        width: '100%',
+        textAlign: 'center',
+    },
     shortListSeparator: {
         marginVertical: 10,
         height: 2,
